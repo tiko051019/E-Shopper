@@ -67,9 +67,13 @@ class HomeListView(ListView):
 
     def get(self,request):
         maininfo = MainInfo.objects.get()
+        carousel = Carousel.objects.all()
+        category = Category.objects.all()
 
         context = {
             'maininfo':maininfo,
+            'carousel':carousel,
+            'category':category,
         }
 
         return render(request,self.template_name,context)

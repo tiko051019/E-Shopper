@@ -1,11 +1,12 @@
 .user-auth {
     display: flex;
     align-items: center;
-    gap: 8px; /* Reduced space between username and button */
-    font-size: 14px; /* Slightly smaller font */
+    gap: 8px;
+    font-size: 14px;
     font-weight: bold;
     color: #333;
-    margin-top: 5px;
+    position: relative;
+    top: 15px;
 }
 
 .user-auth a {
@@ -51,4 +52,10 @@
 .logout-btn:hover {
     background-color: white;
     color: #FE980F;
+}
+.col-sm-4{
+    top:10px;
+}
+.col-sm-8 {
+    bottom:18px;
 }

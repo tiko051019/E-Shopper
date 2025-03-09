@@ -43,9 +43,9 @@
 						<div class="social-icons pull-right">
 							<ul class="nav navbar-nav">
 								<li><a href="{{ maininfo.facebook }}" target="_blank"><i class="fa fa-facebook"></i></a></li>
-								<li><a href="{{ maininfo.dribbble }}" target="_blank"><i class="fa fa-dribbble"></i></a></li>
-								<li><a href="{{ maininfo.linkedin }}" target="_blank"><i class="fa fa-linkedin"></i></a></li>
 								<li><a href="{{ maininfo.twitter }}" target="_blank"><i class="fa fa-twitter"></i></a></li>
+								<li><a href="{{ maininfo.linkedin }}" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+								<li><a href="{{ maininfo.dribbble }}" target="_blank"><i class="fa fa-dribbble"></i></a></li>
 								<li><a href="{{ maininfo.googleplus }}" target="_blank"><i class="fa fa-google-plus"></i></a></li>
 							</ul>
 						</div>
@@ -94,7 +94,7 @@
 							<span>Guest</span>
 							<a href="{% url 'login' %}">Sign In</a>
 						{% endif %}
-					</div>			
+					</div>
 					<div class="col-sm-8">
 						<div class="shop-menu pull-right">
 							<ul class="nav navbar-nav">
@@ -165,7 +165,7 @@
 				<div class="row">
 					<div class="col-sm-2">
 						<div class="companyinfo">
-							<h2><span>e</span>{{ maininfo.name|slice:"1:" }}</h2>
+							<h2><span>{{ maininfo.name|slice:":1" }}</span>{{ maininfo.name|slice:"1:" }}</h2>
 							<p>{{ maininfo.info }}</p>
 						</div>
 					</div>
@@ -318,7 +318,6 @@
 	</footer><!--/Footer-->
 	
 
-  
     <script src="{% static 'js/jquery.js' %}"></script>
 	<script src="{% static 'js/bootstrap.min.js' %}"></script>
 	<script src="{% static 'js/jquery.scrollUp.min.js' %}"></script>
