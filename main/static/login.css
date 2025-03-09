@@ -1,0 +1,54 @@
+.user-auth {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Reduced space between username and button */
+    font-size: 14px; /* Slightly smaller font */
+    font-weight: bold;
+    color: #333;
+    margin-top: 5px;
+}
+
+.user-auth a {
+    text-decoration: none;
+    background-color: #FE980F;
+    color: white;
+    padding: 5px 10px; /* Smaller padding to reduce button size */
+    border-radius: 4px;
+    transition: 0.3s ease-in-out;
+    border: 1px solid #FE980F;
+    font-size: 13px; /* Adjusted button text size */
+}
+
+.user-auth a:hover {
+    background-color: white;
+    color: #FE980F;
+}
+
+.user-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Adjust spacing */
+    margin-left: 20px; /* Push it closer to "Account" */
+}
+
+.username {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+.logout-btn {
+    text-decoration: none;
+    background-color: #FE980F;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    border: 1px solid #FE980F;
+    transition: 0.3s ease-in-out;
+}
+
+.logout-btn:hover {
+    background-color: white;
+    color: #FE980F;
+}
