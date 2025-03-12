@@ -62,19 +62,29 @@ def Logout(request):
 #--------------------------------------------------------------
 #--------------------------------------------------------------
 
+def MainInfoF(context):
+    context['maininfo'] = MainInfo.objects.get()
+    context['gallery'] = Gallery.objects.all() 
+
 class HomeListView(ListView):
     template_name = 'index.html'
 
     def get(self,request):
-        maininfo = MainInfo.objects.get()
         carousel = Carousel.objects.all()
         category = Category.objects.all()
+        items = Items.objects.all()[:6]
+        items_f = Items.objects.first()
+        itemsname = ItemsName.objects.all()
 
         context = {
-            'maininfo':maininfo,
             'carousel':carousel,
             'category':category,
+            'items':items,
+            'items_f':items_f,
+            'itemsname':itemsname
         }
+
+        MainInfoF(context)
 
         return render(request,self.template_name,context)
     
