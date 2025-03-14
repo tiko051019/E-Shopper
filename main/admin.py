@@ -8,7 +8,7 @@ admin.site.register(SubCategory)
 admin.site.register(Gallery)
 admin.site.register(Items)
 admin.site.register(ItemsName)
-
+admin.site.register(Products)
 
 
 

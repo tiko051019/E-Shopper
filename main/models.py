@@ -1,5 +1,7 @@
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+from django.contrib.auth.models import User
+
 
 class MainInfo(models.Model):
     name = models.CharField('Site name',max_length=30)
@@ -81,3 +83,30 @@ class Gallery(models.Model):
 
     def __str__(self):
         return 'Footer Gallery'
+    
+class Products(models.Model):
+    add = models.ImageField('Rec_add_img',upload_to='Images')
+
+    def __str__(self):
+        return 'Products_page_field'
+
+
+class ContactMessage(models.Model):
+    name = models.CharField('Name',max_length=50)
+    email = models.EmailField('Email')
+    subject = models.CharField('Subject',max_length=255)
+    message = models.TextField('Message')
+
+    def __str__(self):
+        return f'{self.name} message'
+
+# class Customuser(models.Model):
+#     key = models.ForeignKey(User,on_delete=models.CASCADE,related_name='customuser_rn')
+#     name = models.CharField('Name',max_length=30)
+#     surname = models.CharField('Surname',max_length=30)
+#     phone = PhoneNumberField('Phone')
+#     address = models.CharField('Address',max_length=255)
+#     birthday = models.DateField('Birthday')
+
+#     def __str__(self):
+#         return f'{self.key}'

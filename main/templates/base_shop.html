@@ -124,24 +124,26 @@
 						</div>
 						<div class="mainmenu pull-left">
 							<ul class="nav navbar-nav collapse navbar-collapse">
-								<li><a href="{% url 'home' %}" class="active">Home</a></li>
-								<li class="dropdown"><a href="#">Shop<i class="fa fa-angle-down"></i></a>
-                                    <ul role="menu" class="sub-menu">
-                                        <li><a href="shop.html">Products</a></li>
-										<li><a href="product-details.html">Product Details</a></li> 
+								<li><a href="{% url 'home' %}" class="{% if request.path == '/home/' %}active{% endif %}">Home</a></li>
+								<li class="dropdown">
+									<a href="#" class="{% if request.path == '/products/' or request.path == '/product-details/' or request.path == '/checkout/' or request.path == '/cart/' or request.path == '/login/' %}active{% endif %}">Shop <i class="fa fa-angle-down"></i></a>
+									<ul role="menu" class="sub-menu">
+										<li><a href="{% url 'products' %}">Products</a></li>
+										<li><a href="product-details">Product Details</a></li> 
 										<li><a href="checkout.html">Checkout</a></li> 
 										<li><a href="cart.html">Cart</a></li> 
 										<li><a href="{% url 'login' %}">Login</a></li> 
-                                    </ul>
-                                </li> 
-								<li class="dropdown"><a href="#">Blog<i class="fa fa-angle-down"></i></a>
-                                    <ul role="menu" class="sub-menu">
-                                        <li><a href="blog.html">Blog List</a></li>
+									</ul>	
+								</li> 
+								<li class="dropdown">
+									<a href="#" class="{% if request.path == '/blog/' or request.path == '/blogsingle/' %}active{% endif %}">Blog <i class="fa fa-angle-down"></i></a>
+									<ul role="menu" class="sub-menu">
+										<li><a href="blog.html">Blog List</a></li>
 										<li><a href="blog-single.html">Blog Single</a></li>
-                                    </ul>
-                                </li> 
-								<li><a href="404.html">404</a></li>
-								<li><a href="contact-us.html">Contact</a></li>
+									</ul>
+								</li> 
+								<li><a href="404.html" class="{% if request.path == '/404/' %}active{% endif %}">404</a></li>
+								<li><a href="{% url 'contact' %}" class="{% if request.path == '/contact/' %}active{% endif %}">Contact</a></li>
 							</ul>
 						</div>
 					</div>
