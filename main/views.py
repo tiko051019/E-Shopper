@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.views.generic import ListView,DetailView
 from django.core.mail import EmailMessage
 from .models import *
@@ -162,7 +162,7 @@ class ContactPage(DetailView):
     
 
 
-def filter_products(request, category_name, subcategory_name=''):
+def filter_home_products(request, category_name, subcategory_name=''):
     category = Category.objects.filter(name=category_name).first()
     if not category:
         return HttpResponse("Category not found")
@@ -183,7 +183,6 @@ def filter_products(request, category_name, subcategory_name=''):
         'category':category,
         'items':items,
         'itemsname':itemsname,
-        'items': items,
         'categories': Category.objects.all()
     }
     MainInfoF(context)
@@ -191,3 +190,40 @@ def filter_products(request, category_name, subcategory_name=''):
     return render(request, 'index.html', context)
 
 
+def filter_products(request, category_name, subcategory_name=''):
+    category = Category.objects.filter(name=category_name).first()
+    if not category:
+        return HttpResponse("Category not found")
+    if subcategory_name:
+        subcategory = SubCategory.objects.filter(subname=subcategory_name, key=category).first()
+        if subcategory:
+            allitems = Items.objects.filter(key1=category, key2=subcategory)
+        else:
+            return HttpResponse("Subcategory not found")
+    else:
+        allitems = Items.objects.filter(key1=category)
+    category = Category.objects.all()
+    products = Products.objects.get()
+    
+    context = {
+        'category':category,
+        'allitems':allitems,
+        'products':products,
+        'categories': Category.objects.all()
+    }
+    MainInfoF(context)
+    MainInlcude(context)
+    return render(request,'shop.html', context)
+
+class Product_Details(DetailView):
+    template_name = 'product-details.html'
+
+    def get(self,request,id):
+        mainitem = get_object_or_404(Items,pk = id)
+        items = Items.objects.all()
+        context = {
+            'mainitem':mainitem,
+            'items':items
+        }
+        MainInfoF(context)
+        return render(request,self.template_name,context)

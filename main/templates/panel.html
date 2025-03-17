@@ -20,8 +20,11 @@
                                     <div class="panel-body">
                                         <ul>
                                             {% for j in i.subcat_rn.all %}
-                                                <li><a href="/filter/{{ i.name }}/{{ j.subname }}/">{{ j.subname }} </a></li>
-
+                                                {% if 'products' in request.path %}
+                                                    <li><a href="/products/filter_products/{{ i.name }}/{{ j.subname }}/">{{ j.subname }} </a></li>
+                                                {% else %}
+                                                    <li><a href="/home/filter/{{ i.name }}/{{ j.subname }}/">{{ j.subname }} </a></li>
+                                                {% endif %}
                                             {% endfor %}
                                         </ul>
                                     </div>
@@ -30,7 +33,11 @@
                         {% else %}
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <h4 class="panel-title"><a href="/filter/{{ i.name }}/">{{ i.name }}</a></h4>
+                                    {% if 'products' in request.path %}
+                                        <h4 class="panel-title"><a href="/products/filter_products/{{ i.name }}/">{{ i.name }}</a></h4>
+                                    {% else %}
+                                        <h4 class="panel-title"><a href="/home/filter/{{ i.name }}/">{{ i.name }}</a></h4>
+                                    {% endif %}
                                 </div>
                             </div>
                         {% endif %}

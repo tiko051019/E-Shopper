@@ -99,6 +99,9 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f'{self.name} message'
+    
+
+
 
 # class Customuser(models.Model):
 #     key = models.ForeignKey(User,on_delete=models.CASCADE,related_name='customuser_rn')

@@ -15,6 +15,7 @@
 	<link href="{% static 'css/main.css' %}" rel="stylesheet">
 	<link href="{% static 'css/responsive.css' %}" rel="stylesheet">
 	<link href="{% static 'login.css' %}" rel="stylesheet">
+	<link href="{% static 'details_botton.css' %}" rel="stylesheet">
     <!--[if lt IE 9]>
     <script src="js/html5shiv.js"></script>
     <script src="js/respond.min.js"></script>
@@ -126,10 +127,9 @@
 							<ul class="nav navbar-nav collapse navbar-collapse">
 								<li><a href="{% url 'home' %}" class="{% if request.path == '/home/' %}active{% endif %}">Home</a></li>
 								<li class="dropdown">
-									<a href="#" class="{% if request.path == '/products/' or request.path == '/product-details/' or request.path == '/checkout/' or request.path == '/cart/' or request.path == '/login/' %}active{% endif %}">Shop <i class="fa fa-angle-down"></i></a>
+									<a href="#" class="{% if request.path == '/products/' or request.path == '/product_details/' or request.path == '/checkout/' or request.path == '/cart/' or request.path == '/login/' %}active{% endif %}">Shop <i class="fa fa-angle-down"></i></a>
 									<ul role="menu" class="sub-menu">
 										<li><a href="{% url 'products' %}">Products</a></li>
-										<li><a href="product-details">Product Details</a></li> 
 										<li><a href="checkout.html">Checkout</a></li> 
 										<li><a href="cart.html">Cart</a></li> 
 										<li><a href="{% url 'login' %}">Login</a></li> 
@@ -145,11 +145,6 @@
 								<li><a href="404.html" class="{% if request.path == '/404/' %}active{% endif %}">404</a></li>
 								<li><a href="{% url 'contact' %}" class="{% if request.path == '/contact/' %}active{% endif %}">Contact</a></li>
 							</ul>
-						</div>
-					</div>
-					<div class="col-sm-3">
-						<div class="search_box pull-right">
-							<input type="text" placeholder="Search"/>
 						</div>
 					</div>
 				</div>

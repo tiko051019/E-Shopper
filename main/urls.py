@@ -7,8 +7,9 @@ urlpatterns = [
     path('home/',HomeListView.as_view(),name='home'),
     path('products/',ProductsPage.as_view(),name='products'),
     path('contact/',ContactPage.as_view(),name='contact'),
-    path('filter/<str:category_name>/<str:subcategory_name>/',filter_products,name='filter'),
-    path('filter/<str:category_name>/',filter_products,name='filter_c'),
-
-    
+    path('home/filter/<str:category_name>/<str:subcategory_name>/',filter_home_products,name='filter'),
+    path('home/filter/<str:category_name>/',filter_home_products,name='filter_c'),
+    path('products/filter_products/<str:category_name>/<str:subcategory_name>/',filter_products,name='filter_products'),
+    path('products/filter_products/<str:category_name>/',filter_products,name='filter_products_c'),
+    path('product-details/<int:id>/',Product_Details.as_view(),name='product_details')
 ]

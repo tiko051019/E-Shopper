@@ -1,0 +1,21 @@
+.add-to-cart {
+    display: inline-block;
+    margin-right: 5px; /* Adds some space between buttons */
+}
+
+.view-details {
+    display: inline-block;
+    margin-top: -25px; /* Moves "View Details" button slightly up */
+    border-radius: 0;
+    background-color: #fe980f !important; /* Sets the new orange color */
+    color: white !important; /* Ensures text is visible */
+    border: none; 
+}
+.view-detailss {
+    background-color:  white!important; /* Sets the new orange color */
+    color: #fe980f !important; 
+    border: none; 
+    display: inline-block;
+    margin-top: -25px; /* Moves "View Details" button slightly up */
+    border-radius: 0;
+}
