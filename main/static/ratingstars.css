@@ -1,0 +1,30 @@
+.rating {
+    direction: rtl;
+    display: flex;
+    justify-content: flex-start;
+    font-size: 30px;
+    color: #d3d3d3;  /* Light gray color for unselected stars */
+}
+
+.rating input {
+    display: none;
+}
+
+.rating label {
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.rating input:checked ~ label {
+    color: #FE980F;  /* Gold color for selected stars */
+}
+
+.rating label:hover,
+.rating label:hover ~ label {
+    color: #FE980F;  /* Highlight on hover */
+}#FE980F
+
+.rating input:checked ~ label:hover,
+.rating input:checked ~ label:hover ~ label {
+    color: #FE980F;  /* Highlight remaining stars when checked */
+}

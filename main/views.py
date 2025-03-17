@@ -221,9 +221,53 @@ class Product_Details(DetailView):
     def get(self,request,id):
         mainitem = get_object_or_404(Items,pk = id)
         items = Items.objects.all()
+        images = ItemsImages.objects.all()
+        if request.user.is_authenticated:
+            name = request.user.username
+            email = request.user.email
+        else:
+            name = ''
+            email = '' 
+        form = ReviewForm()
+
+
+        ratings = ReviewMessage.objects.filter(key=mainitem)
+        print(ratings)                                            #?????????????????????
         context = {
+
+
+            'form':form,
+            'name':name,
+            'email':email,
             'mainitem':mainitem,
-            'items':items
+            'items':items,
+            'images':images,
+        }
+        MainInfoF(context)
+        return render(request,self.template_name,context)
+    
+    def post(self,request,id):
+        form = ReviewForm(request.POST)
+        messagee = ''
+        if form.is_valid():
+            review = form.save()
+            if review.rating > 3:
+                message = 'Thank you for your positive review!'
+            else:
+                message = "We appreciate your feedback and will work on improvements."
+            email = EmailMessage(
+                subject = f'Unswer to your review {request.POST.get('username')}',
+                body = message,
+                from_email=EMAIL_HOST_USER,
+                to=[request.POST.get('email')]
+            )
+            email.send()
+            return redirect('product_details',id = id) 
+        else:
+            messagee = form.errors
+        context = {
+            'form':form,
+            'messagee':messagee,
         }
         MainInfoF(context)
         return render(request,self.template_name,context)

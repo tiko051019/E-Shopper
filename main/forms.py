@@ -12,3 +12,8 @@ class MessageForm(ModelForm):
     class Meta:
         model = ContactMessage
         fields = '__all__'
+        
+class ReviewForm(ModelForm):
+    class Meta:
+        model = ReviewMessage
+        fields = '__all__'
