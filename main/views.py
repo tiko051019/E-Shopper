@@ -222,6 +222,7 @@ class Product_Details(DetailView):
         mainitem = get_object_or_404(Items,pk = id)
         items = Items.objects.all()
         images = ItemsImages.objects.all()
+        details = mainitem.items_details_rn.first()
         if request.user.is_authenticated:
             name = request.user.username
             email = request.user.email
@@ -229,13 +230,16 @@ class Product_Details(DetailView):
             name = ''
             email = '' 
         form = ReviewForm()
+  
+        ratings = ReviewMessage.objects.filter(key=mainitem).values_list('rating', flat=True)
+        if ratings: 
+            rate = sum(ratings) / len(ratings)
+        else:
+            rate = 0
 
-
-        ratings = ReviewMessage.objects.filter(key=mainitem)
-        print(ratings)                                            #?????????????????????
         context = {
-
-
+            'details':details,
+            'rate':rate,
             'form':form,
             'name':name,
             'email':email,

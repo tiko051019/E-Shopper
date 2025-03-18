@@ -41,10 +41,29 @@
 						</div>
 						<div class="col-sm-7">
 							<div class="product-information"><!--/product-information-->
-								<img src="images/product-details/new.jpg" class="newarrival" alt="" />
+								{% if details and details.condition %}
+									<img src="{{ details.condition_img.url }}" class="newarrival" alt="" />
+								{% endif %}
 								<h2>{{ mainitem.items_details_rn.first.moreinfo }}</h2>
 								<p>Web ID: {{ mainitem.id }}</p>
-								<!-- <p><b>Rating:</b> {{ i.rating }} / 5</p> -->
+								<p><b>Rating:</b>
+									<span>
+										{% for i in "12345" %}
+											{% if i|add:0 < rate %}
+												<i class="fas fa-star" style="color: orange;"></i>  <!-- Full Star -->
+											{% elif i|add:1 > rate and i|add:-1 < rate %}
+												{% if rate|floatformat:1|slice:"-2:"|add:0 >= 7 %}
+													<i class="fas fa-star" style="color: orange; opacity: 0.8;"></i>  <!-- Almost Full Star -->
+												{% elif rate|floatformat:1|slice:"-2:"|add:0 >= 3 %}
+													<i class="fas fa-star-half-alt" style="color: orange;"></i>  <!-- Half Star -->
+												{% else %}
+													<i class="fas fa-star-half-alt" style="color: orange; "></i>  <!-- Quarter Star Effect -->
+												{% endif %}
+											{% else %}
+												<i class="far fa-star" style="color: orange;"></i>  <!-- Empty Star -->
+											{% endif %}
+										{% endfor %}
+									</span> <b>{{ rate|floatformat:1 }}</b></p>
 								<span>
 									<span>US ${{ mainitem.price }}</span>
 									<button type="button" class="btn btn-fefault cart">

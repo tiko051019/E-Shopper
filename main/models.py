@@ -74,7 +74,7 @@ class Items(models.Model):
     disc_icon = models.ImageField('Discount Icon',null=True)
 
     def __str__(self):
-        return 'Item'
+        return self.brand
 
 class Products(models.Model):
     add = models.ImageField('Rec_add_img',upload_to='Images')
@@ -90,6 +90,7 @@ class ItemsDetails(models.Model):
     moreinfo = models.TextField('Description')
     availability = models.BooleanField('Availability')
     condition = models.BooleanField('Condition')
+    condition_img = models.ImageField('Logo <New>',upload_to='Images',null=True)
 
     def __str__(self):
         return f'{self.key}'
