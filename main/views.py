@@ -7,6 +7,7 @@ from Shopping.settings import EMAIL_HOST_USER
 from django.contrib.auth import authenticate,login,logout
 from django.conf import settings
 from django.http import HttpResponse
+import math
 
 #--------------------------------------------------------------
 #--------------------Login,Register,Logout---------------------
@@ -49,8 +50,8 @@ def login_register_view(request):
     context = {
         "maininfo": maininfo,
         "form": form,
-        "log_message": log_message,  # Separate login message
-        "reg_message": reg_message,  # Separate register message
+        "log_message": log_message,  
+        "reg_message": reg_message, 
     }
     return render(request, "login.html", context)
 
@@ -60,7 +61,7 @@ def Logout(request):
     return redirect("login")
 
 #--------------------------------------------------------------
-#--------------------------------------------------------------
+#--------------------------Functions---------------------------
 #--------------------------------------------------------------
 
 def MainInfoF(context):
@@ -74,8 +75,9 @@ def MainInlcude(context):
     context['category'] = Category.objects.all()
     context['dct'] = dct
 
-
-
+#--------------------------------------------------------------
+#---------------------------Home-------------------------------
+#--------------------------------------------------------------
 
 class HomeListView(ListView):
     template_name = 'index.html'
@@ -100,6 +102,37 @@ class HomeListView(ListView):
 
         return render(request,self.template_name,context)
     
+def filter_home_products(request, category_name, subcategory_name=''):
+    category = Category.objects.filter(name=category_name).first()
+    if not category:
+        return HttpResponse("Category not found")
+    if subcategory_name:
+        subcategory = SubCategory.objects.filter(subname=subcategory_name, key=category).first()
+        if subcategory:
+            items = Items.objects.filter(key1=category, key2=subcategory)
+        else:
+            return HttpResponse("Subcategory not found")
+    else:
+        items = Items.objects.filter(key1=category)
+    carousel = Carousel.objects.all()
+    category = Category.objects.all()
+    itemsname = ItemsName.objects.all()
+    
+    context = {
+        'carousel':carousel,
+        'category':category,
+        'items':items,
+        'itemsname':itemsname,
+        'categories': Category.objects.all()
+    }
+    MainInfoF(context)
+    MainInlcude(context)
+    return render(request, 'index.html', context)
+    
+#--------------------------------------------------------------
+#------------------------Products------------------------------
+#--------------------------------------------------------------
+
 class ProductsPage(ListView):
     template_name = 'shop.html'
 
@@ -115,7 +148,35 @@ class ProductsPage(ListView):
         MainInlcude(context)
 
         return render(request,self.template_name,context)
+
+def filter_products(request, category_name, subcategory_name=''):
+    category = Category.objects.filter(name=category_name).first()
+    if not category:
+        return HttpResponse("Category not found")
+    if subcategory_name:
+        subcategory = SubCategory.objects.filter(subname=subcategory_name, key=category).first()
+        if subcategory:
+            allitems = Items.objects.filter(key1=category, key2=subcategory)
+        else:
+            return HttpResponse("Subcategory not found")
+    else:
+        allitems = Items.objects.filter(key1=category)
+    category = Category.objects.all()
+    products = Products.objects.get()
     
+    context = {
+        'category':category,
+        'allitems':allitems,
+        'products':products,
+        'categories': Category.objects.all()
+    }
+    MainInfoF(context)
+    MainInlcude(context)
+    return render(request,'shop.html', context)
+
+#--------------------------------------------------------------
+#-------------------------Contact------------------------------
+#--------------------------------------------------------------
 
 class ContactPage(DetailView):
     template_name = 'contact-us.html'
@@ -160,60 +221,9 @@ class ContactPage(DetailView):
         MainInfoF(context)
         return render(request,self.template_name,context)
     
-
-
-def filter_home_products(request, category_name, subcategory_name=''):
-    category = Category.objects.filter(name=category_name).first()
-    if not category:
-        return HttpResponse("Category not found")
-    if subcategory_name:
-        subcategory = SubCategory.objects.filter(subname=subcategory_name, key=category).first()
-        if subcategory:
-            items = Items.objects.filter(key1=category, key2=subcategory)
-        else:
-            return HttpResponse("Subcategory not found")
-    else:
-        items = Items.objects.filter(key1=category)
-    carousel = Carousel.objects.all()
-    category = Category.objects.all()
-    itemsname = ItemsName.objects.all()
-    
-    context = {
-        'carousel':carousel,
-        'category':category,
-        'items':items,
-        'itemsname':itemsname,
-        'categories': Category.objects.all()
-    }
-    MainInfoF(context)
-    MainInlcude(context)
-    return render(request, 'index.html', context)
-
-
-def filter_products(request, category_name, subcategory_name=''):
-    category = Category.objects.filter(name=category_name).first()
-    if not category:
-        return HttpResponse("Category not found")
-    if subcategory_name:
-        subcategory = SubCategory.objects.filter(subname=subcategory_name, key=category).first()
-        if subcategory:
-            allitems = Items.objects.filter(key1=category, key2=subcategory)
-        else:
-            return HttpResponse("Subcategory not found")
-    else:
-        allitems = Items.objects.filter(key1=category)
-    category = Category.objects.all()
-    products = Products.objects.get()
-    
-    context = {
-        'category':category,
-        'allitems':allitems,
-        'products':products,
-        'categories': Category.objects.all()
-    }
-    MainInfoF(context)
-    MainInlcude(context)
-    return render(request,'shop.html', context)
+#--------------------------------------------------------------
+#----------------------Product_Details-------------------------
+#--------------------------------------------------------------
 
 class Product_Details(DetailView):
     template_name = 'product-details.html'
@@ -232,8 +242,10 @@ class Product_Details(DetailView):
         form = ReviewForm()
   
         ratings = ReviewMessage.objects.filter(key=mainitem).values_list('rating', flat=True)
+        countt = ReviewMessage.objects.filter(key=mainitem).count()
+        
         if ratings: 
-            rate = sum(ratings) / len(ratings)
+            rate = math.ceil(sum(ratings) / len(ratings)) if sum(ratings) / len(ratings)%1 > 0.5 else int(sum(ratings) / len(ratings))
         else:
             rate = 0
 
@@ -246,6 +258,7 @@ class Product_Details(DetailView):
             'mainitem':mainitem,
             'items':items,
             'images':images,
+            'countt':countt,
         }
         MainInfoF(context)
         return render(request,self.template_name,context)
@@ -275,3 +288,23 @@ class Product_Details(DetailView):
         }
         MainInfoF(context)
         return render(request,self.template_name,context)
+    
+#--------------------------------------------------------------
+#--------------------------Cart--------------------------------
+#--------------------------------------------------------------
+
+# class CartPage(ListView):
+#     template_name = 'cart.html'
+
+#     def get(self,request):
+#         print('--------------------------------------------------------------------------------------------------------')
+#         if request.user.is_authenticated:
+#             print('--------------------------------------------------------------------------------------------------------')
+#             user_id = request.user.id
+#         else:
+#             return redirect('login')
+#         context = {
+#             'user_id':user_id
+#         }
+
+#         return render(request,self.template_name,context)

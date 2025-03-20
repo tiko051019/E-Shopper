@@ -84,13 +84,13 @@ class Products(models.Model):
 
 
 
-
 class ItemsDetails(models.Model):
     key = models.ForeignKey(Items,on_delete=models.CASCADE,related_name='items_details_rn')
     moreinfo = models.TextField('Description')
     availability = models.BooleanField('Availability')
     condition = models.BooleanField('Condition')
     condition_img = models.ImageField('Logo <New>',upload_to='Images',null=True)
+
 
     def __str__(self):
         return f'{self.key}'
@@ -105,8 +105,6 @@ class ItemsImages(models.Model):
 
     def __str__(self):
         return f'{self.key}'
-
-
 
 class Gallery(models.Model):
     img = models.ImageField('Image',upload_to='Images')
@@ -135,3 +133,8 @@ class ReviewMessage(models.Model):
     message = models.TextField('Message') 
     CHOICES = [(1, 'One'),(2, 'Two'),(3, 'Three'),(4, 'Four'),(5, 'Five'),]
     rating = models.IntegerField(choices=CHOICES, default = 5, null=True,blank=True)
+    review_date = models.DateField('Reviews date',auto_now_add=True,null = True)
+    review_time = models.TimeField('Reviews time',auto_now_add=True,null = True)
+
+    def __str__(self):
+        return f'{self.key}'
