@@ -230,6 +230,7 @@ class Product_Details(DetailView):
 
     def get(self,request,id):
         mainitem = get_object_or_404(Items,pk = id)
+        userr = get_object_or_404(User, pk = request.user.id)
         items = Items.objects.all()
         images = ItemsImages.objects.all()
         details = mainitem.items_details_rn.first()
@@ -249,6 +250,12 @@ class Product_Details(DetailView):
         else:
             rate = 0
 
+        found = UserSave.objects.filter(user_id = userr, item_id = mainitem).first()
+        usersave = UserSave.objects.filter(user_id = userr)
+        saveitems = []
+        for i in usersave.item_id:
+            saveitems.append(i.id)
+        print(saveitems)
         context = {
             'details':details,
             'rate':rate,
@@ -259,6 +266,8 @@ class Product_Details(DetailView):
             'items':items,
             'images':images,
             'countt':countt,
+            'found':found,
+            'usersave':usersave,
         }
         MainInfoF(context)
         return render(request,self.template_name,context)
@@ -293,18 +302,26 @@ class Product_Details(DetailView):
 #--------------------------Cart--------------------------------
 #--------------------------------------------------------------
 
-# class CartPage(ListView):
-#     template_name = 'cart.html'
+class CartPage(ListView):
+    template_name = 'cart.html'
 
-#     def get(self,request):
-#         print('--------------------------------------------------------------------------------------------------------')
-#         if request.user.is_authenticated:
-#             print('--------------------------------------------------------------------------------------------------------')
-#             user_id = request.user.id
-#         else:
-#             return redirect('login')
-#         context = {
-#             'user_id':user_id
-#         }
+    def get(self,request,id):
+        userr = get_object_or_404(User, pk = id)
+        saved_in_cart = UserSave.objects.filter(user_id = userr)
+        context = {
+            "saved_in_cart":saved_in_cart,
+        }
+        MainInfoF(context)
+        return render(request,self.template_name,context)
 
-#         return render(request,self.template_name,context)
+
+def UserSaveF(request,user_id,item_id):
+    userr = get_object_or_404(User, pk=user_id)
+    itemm = get_object_or_404(Items, pk=item_id)
+    found = UserSave.objects.filter(user_id = userr, item_id = itemm)
+    if found:
+        UserSave.objects.get(user_id = userr, item_id = itemm).delete()
+    else:
+        UserSave.objects.create(user_id = userr, item_id = itemm)
+
+    return redirect(request.META.get('HTTP_REFERER', '/'))

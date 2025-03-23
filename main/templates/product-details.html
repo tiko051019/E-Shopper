@@ -62,10 +62,16 @@
 								</p>
 								<span>
 									<span>US ${{ mainitem.price }}</span>
+									<a href="{% url 'save_f' user.id mainitem.id  %}">
 									<button type="button" class="btn btn-fefault cart">
 										<i class="fa fa-shopping-cart"></i>
+										{% if found %}
+										Remove from cart
+										{% else %}
 										Add to cart
+										{% endif %}
 									</button>
+									</a>
 								</span>
 								<p><b>Availability:</b>{% if  mainitem.items_details_rn.first.availability %} In Stock{% else %} Coming Soon{% endif %}</p>
 								<p><b>Condition:</b>{% if  mainitem.items_details_rn.first.condition %} New {% else %} Old{% endif %}</p>
@@ -163,8 +169,13 @@
 													<img src="{{ i.img.url }}" alt="" width="100px" height="120px"/>
 													<h2>${{ i.price }}</h2>
 													<p>{{ i.info }}</p>
-													<a href="#" class="btn btn-default add-to-cart">
-														<i class="fa fa-shopping-cart"></i>Add to cart
+													<a href="{% url 'save_f' user.id i.id  %}" class="btn btn-default add-to-cart">
+														<i class="fa fa-shopping-cart"></i>
+														{% if i.id in usersave %}
+															Remove from cart
+														{% else %}
+															Add to cart
+														{% endif %}
 													</a>
 												</div>
 											</div>

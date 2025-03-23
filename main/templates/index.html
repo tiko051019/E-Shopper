@@ -53,14 +53,14 @@
 										<img src="{{ i.img.url }}" alt="" />
 										<h2>${{ i.price }}</h2>
 										<p>{{ i.info }}</p>
-										<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i> Add to cart</a>
+										<a href="{% url 'save_f' user.id i.id  %}" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i> Add to cart</a>
 										<a href="{% url 'product_details' i.id %}" class="btn btn-info view-details"><i class="fa fa-eye"></i> View Details</a>
 									</div>
 									<div class="product-overlay">
 										<div class="overlay-content">
 											<h2>${{ i.price }}</h2>
 											<p>{{ i.info }}</p>
-											<a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i> Add to cart</a>
+											<a href="{% url 'save_f' user.id i.id  %}" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i> Add to cart</a>
 											<a href="{% url 'product_details' i.id %}" class="btn btn-info view-detailss"><i class="fa fa-eye"></i> View Details</a>
 										</div>
 									</div>
@@ -128,7 +128,7 @@
 													<img src="{{ i.img.url }}" alt="" width="100px" height="120px"/>
 													<h2>${{ i.price }}</h2>
 													<p>{{ i.info }}</p>
-													<a href="#" class="btn btn-default add-to-cart">
+													<a href="{% url 'save_f' user.id i.id  %}" class="btn btn-default add-to-cart">
 														<i class="fa fa-shopping-cart"></i>Add to cart
 													</a>
 												</div>

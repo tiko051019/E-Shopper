@@ -12,5 +12,6 @@ urlpatterns = [
     path('products/filter_products/<str:category_name>/<str:subcategory_name>/',filter_products,name='filter_products'),
     path('products/filter_products/<str:category_name>/',filter_products,name='filter_products_c'),
     path('product-details/<int:id>/',Product_Details.as_view(),name='product_details'),
-    # path('cart/<int:user_id>/',CartPage.as_view(),name='cart')
+    path('cart/<int:id>/',CartPage.as_view(),name='cart'),
+    path('save/<int:user_id>/<int:item_id>/',UserSaveF,name = 'save_f')
 ]

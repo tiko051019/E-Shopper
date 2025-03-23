@@ -105,8 +105,8 @@
 								<li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>
 								<li><a href="checkout.html"><i class="fa fa-crosshairs"></i> Checkout</a></li>
 								<li>
-									{% if user_id %}
-									<a href="{% url 'cart' user_id=user_id %}">
+									{% if user.is_authenticated %}
+									<a href="{% url 'cart' user.id %}">
 										{% else %}
 									<a href="{% url 'login' %}">
 										{% endif %}

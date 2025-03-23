@@ -82,8 +82,6 @@ class Products(models.Model):
     def __str__(self):
         return 'Products_page_field'
 
-
-
 class ItemsDetails(models.Model):
     key = models.ForeignKey(Items,on_delete=models.CASCADE,related_name='items_details_rn')
     moreinfo = models.TextField('Description')
@@ -114,8 +112,6 @@ class Gallery(models.Model):
     def __str__(self):
         return 'Footer Gallery'
     
-
-
 class ContactMessage(models.Model):
     name = models.CharField('Name',max_length=50)
     email = models.EmailField('Email')
@@ -125,7 +121,6 @@ class ContactMessage(models.Model):
     def __str__(self):
         return f'{self.name} message'
     
-
 class ReviewMessage(models.Model):
     key = models.ForeignKey(Items,on_delete=models.CASCADE,related_name='reviews_rn',null = True, blank = True)
     name = models.CharField('Name',max_length=50)
@@ -138,3 +133,10 @@ class ReviewMessage(models.Model):
 
     def __str__(self):
         return f'{self.key}'
+    
+class UserSave(models.Model):
+    user_id = models.ForeignKey(User,on_delete=models.CASCADE,related_name='user_id_rn')
+    item_id = models.ForeignKey(Items,on_delete=models.CASCADE,related_name='item_id_rn')
+
+    def __str__(self):
+        return f'{self.user_id} - {self.item_id}'
