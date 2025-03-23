@@ -75,6 +75,7 @@ def MainInlcude(context):
     context['category'] = Category.objects.all()
     context['dct'] = dct
 
+
 #--------------------------------------------------------------
 #---------------------------Home-------------------------------
 #--------------------------------------------------------------
@@ -95,7 +96,7 @@ class HomeListView(ListView):
             'itemsname':itemsname,
 
         }
-
+        SaveItems_Id_F(request,context)
         MainInfoF(context)
         MainInlcude(context)
 
@@ -146,6 +147,7 @@ class ProductsPage(ListView):
         }
         MainInfoF(context)
         MainInlcude(context)
+        SaveItems_Id_F(request,context)
 
         return render(request,self.template_name,context)
 
@@ -250,12 +252,6 @@ class Product_Details(DetailView):
         else:
             rate = 0
 
-        found = UserSave.objects.filter(user_id = userr, item_id = mainitem).first()
-        usersave = UserSave.objects.filter(user_id = userr)
-        saveitems = []
-        for i in usersave.item_id:
-            saveitems.append(i.id)
-        print(saveitems)
         context = {
             'details':details,
             'rate':rate,
@@ -266,10 +262,9 @@ class Product_Details(DetailView):
             'items':items,
             'images':images,
             'countt':countt,
-            'found':found,
-            'usersave':usersave,
         }
         MainInfoF(context)
+        SaveItems_Id_F(request,context)
         return render(request,self.template_name,context)
     
     def post(self,request,id):
@@ -325,3 +320,12 @@ def UserSaveF(request,user_id,item_id):
         UserSave.objects.create(user_id = userr, item_id = itemm)
 
     return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+def SaveItems_Id_F(request,context):
+    userr = get_object_or_404(User, pk = request.user.id)
+    id_saver = []
+    usersave = UserSave.objects.filter(user_id = userr)
+    for i in usersave:
+        id_saver.append(i.item_id.id)
+    context['id_saver'] = id_saver

@@ -65,10 +65,10 @@
 									<a href="{% url 'save_f' user.id mainitem.id  %}">
 									<button type="button" class="btn btn-fefault cart">
 										<i class="fa fa-shopping-cart"></i>
-										{% if found %}
-										Remove from cart
+										{% if mainitem.id in id_saver %}
+											- Remove
 										{% else %}
-										Add to cart
+											Add to cart
 										{% endif %}
 									</button>
 									</a>
@@ -171,8 +171,8 @@
 													<p>{{ i.info }}</p>
 													<a href="{% url 'save_f' user.id i.id  %}" class="btn btn-default add-to-cart">
 														<i class="fa fa-shopping-cart"></i>
-														{% if i.id in usersave %}
-															Remove from cart
+														{% if i.id in id_saver %}
+															- Remove
 														{% else %}
 															Add to cart
 														{% endif %}
