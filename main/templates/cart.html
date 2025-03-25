@@ -44,7 +44,7 @@
 								<p class="cart_total_price">$59</p>
 							</td>
 							<td class="cart_delete">
-								<a class="cart_quantity_delete" href=""><i class="fa fa-times"></i></a>
+								<a class="cart_quantity_delete" href="{% url 'save_f' user.id i.item_id.id  %}"><i class="fa fa-times"></i></a>
 							</td>
 						</tr>
 					{% endfor %}

@@ -53,3 +53,18 @@
     background-color: white;
     color: #FE980F;
 }
+
+.forgot-password-link {
+    display: block;
+    font-size: 16px;
+    color: #fe980f;
+    font-weight: 600;
+    margin-top: 10px;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.forgot-password-link:hover {
+    color: #e68900;
+    text-decoration: underline;
+}

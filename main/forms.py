@@ -17,3 +17,8 @@ class ReviewForm(ModelForm):
     class Meta:
         model = ReviewMessage
         fields = '__all__'
+
+class ForgotForm(ModelForm):
+    class Meta:
+        model = User
+        fields = ['username']

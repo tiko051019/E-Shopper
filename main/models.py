@@ -140,3 +140,11 @@ class UserSave(models.Model):
 
     def __str__(self):
         return f'{self.user_id} - {self.item_id}'
+    
+class UserFor(models.Model):
+    key = models.ForeignKey(User,on_delete=models.CASCADE,related_name='user_rn')
+    ver_code = models.IntegerField('verification code',blank=True,null=True)
+
+
+    def __str__(self):
+        return f'{self.key} {self.ver_code}'

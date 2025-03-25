@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate,login,logout
 from django.conf import settings
 from django.http import HttpResponse
 import math
+import random
 
 #--------------------------------------------------------------
 #--------------------Login,Register,Logout---------------------
@@ -128,6 +129,7 @@ def filter_home_products(request, category_name, subcategory_name=''):
     }
     MainInfoF(context)
     MainInlcude(context)
+    SaveItems_Id_F(request,context)
     return render(request, 'index.html', context)
     
 #--------------------------------------------------------------
@@ -140,7 +142,12 @@ class ProductsPage(ListView):
     def get(self,request):
         products = Products.objects.get()
         allitems = Items.objects.all()
-
+        # items_count = Items.objects.all().count()
+        # page_count = 1
+        # while items_count > 9:
+        #     page_count+=1
+        #     items_count-=1
+            
         context = {
             'products':products,
             'allitems':allitems,
@@ -174,6 +181,7 @@ def filter_products(request, category_name, subcategory_name=''):
     }
     MainInfoF(context)
     MainInlcude(context)
+    SaveItems_Id_F(request,context)
     return render(request,'shop.html', context)
 
 #--------------------------------------------------------------
@@ -321,11 +329,76 @@ def UserSaveF(request,user_id,item_id):
 
     return redirect(request.META.get('HTTP_REFERER', '/'))
 
-
 def SaveItems_Id_F(request,context):
-    userr = get_object_or_404(User, pk = request.user.id)
-    id_saver = []
-    usersave = UserSave.objects.filter(user_id = userr)
-    for i in usersave:
-        id_saver.append(i.item_id.id)
-    context['id_saver'] = id_saver
+    if request.user.is_authenticated:
+        userr = get_object_or_404(User, pk = request.user.id)
+        id_saver = []
+        usersave = UserSave.objects.filter(user_id = userr)
+        for i in usersave:
+            id_saver.append(i.item_id.id)
+        context['id_saver'] = id_saver
+
+#--------------------------------------------------------------
+#-------------------------ForgotPage---------------------------
+#--------------------------------------------------------------
+
+def ForgotPage(request):
+    username = request.POST.get('username')
+    if username:
+        return redirect('redirect_middle',username)
+    context = {
+
+    }
+    MainInfoF(context)
+    return render(request,'forgotpage.html',context)
+
+
+def RedirectMidddle(request,username):
+    user_id = User.objects.filter(username = username).first().id
+    userr = get_object_or_404(User,pk = user_id)
+    number = random.randint(1000,9999)
+    UserFor.objects.update(key = userr,ver_code = number)
+    email = User.objects.filter(username = username).first().email
+
+    email_message = EmailMessage(
+        subject='hello',
+        body=f'{number}',
+        from_email=EMAIL_HOST_USER,
+        to = [email]
+    )
+    email_message.send()
+    return redirect('codecheck',username)
+
+
+def DighitalPage(request,username):
+    userr = get_object_or_404(User,pk =User.objects.filter(username = username).first().id)
+    ver_code_db = int(UserFor.objects.filter(key = userr).first().ver_code)
+    if request.method == 'POST':
+        ver_code_user = int(request.POST.get('ver_code'))
+        if ver_code_user == ver_code_db:
+            UserFor.objects.filter(key = userr).update(ver_code = None)
+            return redirect('reset',username)
+    return render(request,'codecheck.html')
+
+
+def PasswordReset(request,username):
+    userr = User.objects.filter(username = username).first()
+    reset_message = ''
+    if request.method == 'POST':
+        new_password = request.POST.get('password1')
+        new_password_2 = request.POST.get('password2')
+        if new_password == new_password_2:
+            userr.set_password(new_password)
+            userr.save()
+            return redirect('login')
+        else:
+            reset_message = 'Passwords are not the same'
+    context = {
+            'reset_message':reset_message,
+        }
+    MainInfoF(context)
+    return render(request,'passwordreset.html',context)
+
+#--------------------------------------------------------------
+#--------------------------------------------------------------
+#--------------------------------------------------------------

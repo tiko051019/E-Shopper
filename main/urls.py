@@ -13,5 +13,10 @@ urlpatterns = [
     path('products/filter_products/<str:category_name>/',filter_products,name='filter_products_c'),
     path('product-details/<int:id>/',Product_Details.as_view(),name='product_details'),
     path('cart/<int:id>/',CartPage.as_view(),name='cart'),
-    path('save/<int:user_id>/<int:item_id>/',UserSaveF,name = 'save_f')
+    path('save/<int:user_id>/<int:item_id>/',UserSaveF,name = 'save_f'),
+    path('forgot/',ForgotPage,name='forgot_1'),
+    path('check_code/<str:username>/',RedirectMidddle,name = 'redirect_middle'),
+    path('password_numbers/<str:username>/',DighitalPage,name = 'codecheck'),
+    path('password_reset/<str:username>/',PasswordReset,name = 'reset'),
+    
 ]

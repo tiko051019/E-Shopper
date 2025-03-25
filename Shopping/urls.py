@@ -21,7 +21,8 @@ from django.conf import settings
 from django.shortcuts import redirect
 
 urlpatterns = [
-    path('', lambda request: redirect('/home/')),
+    path('', lambda request: redirect('/home/')),     
+
     path('admin/', admin.site.urls),
     path('',include('main.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
