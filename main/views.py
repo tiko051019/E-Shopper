@@ -1,14 +1,18 @@
+from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
+from django.contrib.auth.tokens import default_token_generator
 from django.shortcuts import render,redirect,get_object_or_404
+from django.contrib.auth import authenticate,login,logout
 from django.views.generic import ListView,DetailView
+from django.utils.encoding import force_bytes
+from Shopping.settings import EMAIL_HOST_USER
+from django.core.paginator import Paginator
 from django.core.mail import EmailMessage
+from django.http import HttpResponse
+from django.conf import settings
 from .models import *
 from .forms import *
-from Shopping.settings import EMAIL_HOST_USER
-from django.contrib.auth import authenticate,login,logout
-from django.conf import settings
-from django.http import HttpResponse
-import math
 import random
+import math
 
 #--------------------------------------------------------------
 #--------------------Login,Register,Logout---------------------
@@ -142,14 +146,13 @@ class ProductsPage(ListView):
     def get(self,request):
         products = Products.objects.get()
         allitems = Items.objects.all()
-        # items_count = Items.objects.all().count()
-        # page_count = 1
-        # while items_count > 9:
-        #     page_count+=1
-        #     items_count-=1
+        paginator = Paginator(allitems, 9) 
+        page_number = request.GET.get('page') 
+        page_obj = paginator.get_page(page_number)
             
         context = {
             'products':products,
+            'page_obj':page_obj,
             'allitems':allitems,
         }
         MainInfoF(context)
@@ -240,7 +243,6 @@ class Product_Details(DetailView):
 
     def get(self,request,id):
         mainitem = get_object_or_404(Items,pk = id)
-        userr = get_object_or_404(User, pk = request.user.id)
         items = Items.objects.all()
         images = ItemsImages.objects.all()
         details = mainitem.items_details_rn.first()
@@ -310,12 +312,48 @@ class CartPage(ListView):
 
     def get(self,request,id):
         userr = get_object_or_404(User, pk = id)
+        taxes = Total_payment.objects.get()
         saved_in_cart = UserSave.objects.filter(user_id = userr)
+        total = 0
+        dct = {}
+        for i in saved_in_cart:
+            dct[i] = i.item_id.price * i.quantity
+        total_price = 0
+        for i in saved_in_cart:
+            total_price += i.item_id.price * i.quantity
+        total = total_price
+        total += taxes.Eco_Tax + taxes.Shipping_Cost
+
         context = {
-            "saved_in_cart":saved_in_cart,
+            'total':total,
+            'taxes':taxes,
+            "dct":dct,
+            'total_price':total_price
         }
         MainInfoF(context)
         return render(request,self.template_name,context)
+    
+
+def Item_Quantity_Add(request,user_id,item_id):
+    userr = get_object_or_404(User, pk = user_id)
+    itemm = get_object_or_404(UserSave,user_id = userr,item_id = item_id)
+    if itemm.quantity >= 10:
+        return redirect(request.META.get('HTTP_REFERER', '/'))
+    else:
+        itemm.quantity += 1
+        itemm.save()
+    return redirect(request.META.get('HTTP_REFERER', '/'))
+
+  
+def Item_Quantity_Remove(request,user_id,item_id):
+    userr = get_object_or_404(User, pk = user_id)
+    itemm = get_object_or_404(UserSave,user_id = userr,item_id = item_id)
+    if itemm.quantity <= 1:
+        return redirect(request.META.get('HTTP_REFERER', '/'))
+    else:
+        itemm.quantity -= 1
+        itemm.save()
+    return redirect(request.META.get('HTTP_REFERER', '/'))
 
 
 def UserSaveF(request,user_id,item_id):
@@ -328,6 +366,7 @@ def UserSaveF(request,user_id,item_id):
         UserSave.objects.create(user_id = userr, item_id = itemm)
 
     return redirect(request.META.get('HTTP_REFERER', '/'))
+
 
 def SaveItems_Id_F(request,context):
     if request.user.is_authenticated:
@@ -356,33 +395,42 @@ def ForgotPage(request):
 def RedirectMidddle(request,username):
     user_id = User.objects.filter(username = username).first().id
     userr = get_object_or_404(User,pk = user_id)
+    uid = urlsafe_base64_encode(force_bytes(userr.pk))
+    token = default_token_generator.make_token(userr)
     number = random.randint(1000,9999)
-    UserFor.objects.update(key = userr,ver_code = number)
+    UserFor.objects.update_or_create(key = userr,ver_code = number)
     email = User.objects.filter(username = username).first().email
 
     email_message = EmailMessage(
-        subject='hello',
-        body=f'{number}',
+        subject='Verify to change password',
+        body=f'This is your ferification code {number}',
         from_email=EMAIL_HOST_USER,
         to = [email]
     )
     email_message.send()
-    return redirect('codecheck',username)
+    return redirect('codecheck',uid,token)
 
 
-def DighitalPage(request,username):
-    userr = get_object_or_404(User,pk =User.objects.filter(username = username).first().id)
+def DighitalPage(request,uidb64, token):
+    uid = urlsafe_base64_decode(uidb64).decode()
+    userr = get_object_or_404(User,pk = uid)
+    token = default_token_generator.make_token(userr)
+    uid = urlsafe_base64_encode(force_bytes(userr.pk))
+    username = userr.username
     ver_code_db = int(UserFor.objects.filter(key = userr).first().ver_code)
-    if request.method == 'POST':
-        ver_code_user = int(request.POST.get('ver_code'))
-        if ver_code_user == ver_code_db:
-            UserFor.objects.filter(key = userr).update(ver_code = None)
-            return redirect('reset',username)
+    if default_token_generator.check_token(userr, token):
+        if request.method == 'POST':
+            ver_code_user = int(request.POST.get('ver_code'))
+            if ver_code_user == ver_code_db:
+                UserFor.objects.filter(key = userr).delete()
+                return redirect('reset',uidb64 = uid,token =  token)
     return render(request,'codecheck.html')
 
 
-def PasswordReset(request,username):
-    userr = User.objects.filter(username = username).first()
+def PasswordReset(request,uidb64, token):
+    uid = urlsafe_base64_decode(uidb64).decode()
+    userr = get_object_or_404(User,pk = uid)
+
     reset_message = ''
     if request.method == 'POST':
         new_password = request.POST.get('password1')
@@ -394,11 +442,13 @@ def PasswordReset(request,username):
         else:
             reset_message = 'Passwords are not the same'
     context = {
-            'reset_message':reset_message,
+        'reset_message':reset_message,
         }
     MainInfoF(context)
     return render(request,'passwordreset.html',context)
 
+
 #--------------------------------------------------------------
 #--------------------------------------------------------------
 #--------------------------------------------------------------
+

@@ -13,4 +13,5 @@ admin.site.register(ItemsDetails)
 admin.site.register(ItemsImages)
 admin.site.register(ReviewMessage)
 admin.site.register(UserSave)
-
+admin.site.register(UserFor)
+admin.site.register(Total_payment)

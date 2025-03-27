@@ -21,27 +21,27 @@
 						</tr>
 					</thead>
 					<tbody>
-						{% for i in saved_in_cart %}
+						{% for i,value in dct.items %}
 						<tr>
 							<td class="cart_product">
-								<a href=""><img src="{{ i.item_id.img.url }}" alt=""></a>
+								<a href=""><img src="{{ i.item_id.img.url }}" alt="" width="120px" height="120px"></a>
 							</td>
 							<td class="cart_description">
 								<h4><a href="">{{ i.item_id.brand }}</a></h4>
 								<p>Web ID: {{ i.item_id.id }}</p>
 							</td>
 							<td class="cart_price">
-								<p>$59</p>
+								<p>${{ i.item_id.price }}</p>
 							</td>
 							<td class="cart_quantity">
 								<div class="cart_quantity_button">
-									<a class="cart_quantity_up" href=""> + </a>
-									<input class="cart_quantity_input" type="text" name="quantity" value="1" autocomplete="off" size="2">
-									<a class="cart_quantity_down" href=""> - </a>
+									<a class="cart_quantity_up" href="{% url 'add_quantity' user.id i.item_id.id  %}"> + </a>
+									<input class="cart_quantity_input" type="text" name="quantity" value="{{ i.quantity }}" autocomplete="off" size="2">
+									<a class="cart_quantity_down" href="{% url 'remove_quantity' user.id i.item_id.id  %}"> - </a>
 								</div>
 							</td>
 							<td class="cart_total">
-								<p class="cart_total_price">$59</p>
+								<p class="cart_total_price">${{ value }}</p>
 							</td>
 							<td class="cart_delete">
 								<a class="cart_quantity_delete" href="{% url 'save_f' user.id i.item_id.id  %}"><i class="fa fa-times"></i></a>
@@ -118,10 +118,18 @@
 				<div class="col-sm-6">
 					<div class="total_area">
 						<ul>
-							<li>Cart Sub Total <span>$59</span></li>
-							<li>Eco Tax <span>$2</span></li>
+							<li>Cart Sub Total <span>${{ total_price }}</span></li>
+							{% if taxes.Eco_Tax == 0 %}
+							<li>Eco Tax <span>Free</span></li>
+							{% else %}
+							<li>Eco Tax <span>${{ taxes.Eco_Tax }}</span></li>
+							{% endif %}
+							{% if taxes.Shipping_Cost == 0 %}
 							<li>Shipping Cost <span>Free</span></li>
-							<li>Total <span>$61</span></li>
+							{% else %}
+							<li>Shipping Cost <span>${{ taxes.Shipping_Cost }}</span></li>
+							{% endif %}
+							<li>Total <span>${{ total }}</span></li>
 						</ul>
 							<a class="btn btn-default update" href="">Update</a>
 							<a class="btn btn-default check_out" href="">Check Out</a>

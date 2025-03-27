@@ -1,12 +1,10 @@
 .user-auth {
+    position: absolute;
+    right: 0px; 
+    top: 8px;
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    font-weight: bold;
-    color: #333;
-    position: relative;
-    top: 6px;
+    gap: 10px;
 }
 
 .user-auth a {

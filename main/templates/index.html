@@ -17,7 +17,7 @@
 												<h1><span>{{ maininfo.name|slice:":1" }}</span>{{ maininfo.name|slice:"1:" }}</h1>
 												<h2>{{ i.text1 }}</h2>
 												<p>{{ i.text2 }} </p>
-												<button type="button" class="btn btn-default get">Get it now</button>
+												<a href="{% url 'products' %}" class="btn btn-default get">Get it now</a>
 											</div>
 											<div class="col-sm-6">
 												<img src="{{ i.img.url }}" class="girl img-responsive" alt="" />
@@ -84,15 +84,8 @@
 									<img src="{{ i.disc_icon.url }}" class="new" alt="" />
 									{% endif %}
 								</div>
-								<div class="choose">
-									<ul class="nav nav-pills nav-justified">
-										<li><a href="#"><i class="fa fa-plus-square"></i> Add to wishlist</a></li>
-										<li><a href="#"><i class="fa fa-plus-square"></i> Add to compare</a></li>
-									</ul>
-								</div>
 							</div>
 						</div>
-						
 						{% endfor %}
 					</div><!--features_items-->
 

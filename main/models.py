@@ -16,6 +16,8 @@ class MainInfo(models.Model):
     info = models.TextField('Text',null=True)
     owner = models.CharField('Owner',max_length=20,null=True)
     add = models.ImageField('Addvertisement',upload_to='Images',null=True,blank=True)
+    map_img = models.ImageField('Map',upload_to='Images')
+    adress = models.CharField('Adress',max_length=255,null = True)
 
     def __str__(self):
         return 'MainInfo'
@@ -137,6 +139,8 @@ class ReviewMessage(models.Model):
 class UserSave(models.Model):
     user_id = models.ForeignKey(User,on_delete=models.CASCADE,related_name='user_id_rn')
     item_id = models.ForeignKey(Items,on_delete=models.CASCADE,related_name='item_id_rn')
+    quantity = models.IntegerField('Items number in cart',default = 1)
+    line_total = models.IntegerField('Line Total',null=True)
 
     def __str__(self):
         return f'{self.user_id} - {self.item_id}'
@@ -148,3 +152,8 @@ class UserFor(models.Model):
 
     def __str__(self):
         return f'{self.key} {self.ver_code}'
+
+class Total_payment(models.Model):
+    Eco_Tax = models.IntegerField('Eco Tax Price')
+    Shipping_Cost = models.IntegerField('Shipping_Cost')
+    

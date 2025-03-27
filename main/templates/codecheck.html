@@ -1,13 +1,15 @@
 {% extends 'base_shop.html' %}
 {% block content %}
-    <div class="form-container">
-        <h2>Enter Verification Code</h2>
-        <form action="" method="post">
-            {% csrf_token %}
-            <div class="input-group">
-                <input type="text" name="ver_code" placeholder="Enter Code" required>
-            </div>
-            <button type="submit" class="btn-submit">Verify</button>
-        </form>
-    </div>
+<hr>
+<div class="form-container">
+    <h2>Enter Verification Code</h2>
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="input-group">
+            <input type="text" name="ver_code" placeholder="Enter Code" required>
+        </div>
+        <button type="submit" class="btn-submit">Verify</button>
+    </form>
+</div>
+<hr>
 {% endblock %}

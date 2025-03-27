@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import *
+from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
     path('login/',login_register_view,name='login'),
@@ -16,7 +17,8 @@ urlpatterns = [
     path('save/<int:user_id>/<int:item_id>/',UserSaveF,name = 'save_f'),
     path('forgot/',ForgotPage,name='forgot_1'),
     path('check_code/<str:username>/',RedirectMidddle,name = 'redirect_middle'),
-    path('password_numbers/<str:username>/',DighitalPage,name = 'codecheck'),
-    path('password_reset/<str:username>/',PasswordReset,name = 'reset'),
-    
+    path('password_numbers/<uidb64>/<token>/',DighitalPage,name = 'codecheck'),
+    path('password_reset/<uidb64>/<token>/',PasswordReset,name = 'reset'),
+    path('add_item/<int:user_id>/<int:item_id>/',Item_Quantity_Add,name='add_quantity'),
+    path('remove_item/<int:user_id>/<int:item_id>/',Item_Quantity_Remove,name='remove_quantity')
 ]
