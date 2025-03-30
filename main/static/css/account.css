@@ -1,0 +1,140 @@
+/* Container for the entire account page */
+.account-containerrr {
+    width: 80%;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+}
+
+/* Account section */
+.profile-sectionnn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.profile-sectionnn img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-sectionnn h3 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+.emailll {
+    font-size: 16px;
+    color: #777;
+}
+
+/* Form section */
+.account-formmm {
+    display: grid;
+    gap: 15px;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.account-formmm label {
+    font-weight: bold;
+    color: #555;
+}
+
+.account-formmm input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 600px;
+}
+
+.save-btnnn {
+    padding: 10px 20px;
+    background-color: #e68900;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 200px;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+.save-btnnn:hover {
+    background-color: #e68900;
+}
+
+/* User auth section */
+.user-authhh {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-authhh img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+.logout-btnnn, .login-btnnn {
+    padding: 10px 20px;
+    background-color: #e68900;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.logout-btnnn:hover, .login-btnnn:hover {
+    background-color: #e68900;
+}
+
+/* Payment History section */
+.payment-history {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.payment-history h4 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.payment-history-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.payment-history-table th, .payment-history-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.payment-history-table th {
+    background-color: #f2f2f2;
+}
+
+.payment-history-table tr:hover {
+    background-color: #f9f9f9;
+}

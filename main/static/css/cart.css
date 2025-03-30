@@ -1,0 +1,15 @@
+h3 {
+    color: #e68900;
+    font-size: 22px;
+    font-weight: bold;
+    border-bottom: 2px solid #e68900; /* Thin orange bottom border */
+    padding-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.address-text {
+    color: #e68900; /* Orange color for the address */
+    font-weight: 600;
+}

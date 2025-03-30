@@ -1,0 +1,68 @@
+{% extends 'base_shop.html' %}
+{% block content %}
+
+<div class="account-containerrr">
+    <!-- Account Section -->
+    <div class="profile-sectionnn">
+        <img src="https://icones.pro/wp-content/uploads/2021/02/icone-utilisateur-orange.png" alt="Profile Picture">
+        <div>
+            <h3>{{ user.username|capfirst }}</h3>
+            <p class="emailll">{{ user.email }}</p>
+        </div>
+    </div>
+
+    <!-- Form for Updating User Information -->
+    <form class="account-formmm" action="" method="post">
+        {% csrf_token %}
+        <label for="name">Your Name:</label>
+        <input type="text" id="name" name="name" value="{{ name }}" placeholder="Enter your name">
+
+        <label for="surname">Your Surname:</label>
+        <input type="text" id="surname" name="surname" value="{{ surname }}" placeholder="Enter your surname">
+
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" name="phone" value="{{ phone }}" placeholder="Enter your phone number">
+
+        <label for="adress">Delivery Address:</label>
+        <input type="text" id="adress" name="adress" value="{{ adress }}" placeholder="Enter your delivery address">
+
+        <button type="submit" class="save-btnnn">Save</button>
+    </form>
+
+    <!-- User Authentication Section -->
+    <div class="user-authhh">
+        {% if user.is_authenticated %}
+            <img src="https://icones.pro/wp-content/uploads/2021/02/icone-utilisateur-orange.png" alt="" width="30px">
+            <span>{{ user.username|capfirst }}</span>
+            <a href="{% url 'logout' %}" class="logout-btnnn">Sign Out</a>
+        {% else %}
+            <span>Guest</span>
+            <a href="{% url 'login' %}" class="login-btnnn">Sign In</a>
+        {% endif %}
+    </div>
+
+    <!-- Payment History Section -->
+    <div class="payment-history">
+        <h4>Payment History</h4>
+        <table class="payment-history-table">
+            <thead>
+                <tr>
+                    <th>Payment</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in history %}
+                    <tr>
+                        <td>{{ i.payment }}$</td>
+                        <td>{{ i.Payment_date }}</td>
+                        <td>{{ i.Payments_time }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

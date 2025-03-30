@@ -16,7 +16,7 @@ class MainInfo(models.Model):
     info = models.TextField('Text',null=True)
     owner = models.CharField('Owner',max_length=20,null=True)
     add = models.ImageField('Addvertisement',upload_to='Images',null=True,blank=True)
-    map_img = models.ImageField('Map',upload_to='Images')
+    map_img = models.ImageField('Map',upload_to='Images',null = True)
     adress = models.CharField('Adress',max_length=255,null = True)
 
     def __str__(self):
@@ -140,7 +140,6 @@ class UserSave(models.Model):
     user_id = models.ForeignKey(User,on_delete=models.CASCADE,related_name='user_id_rn')
     item_id = models.ForeignKey(Items,on_delete=models.CASCADE,related_name='item_id_rn')
     quantity = models.IntegerField('Items number in cart',default = 1)
-    line_total = models.IntegerField('Line Total',null=True)
 
     def __str__(self):
         return f'{self.user_id} - {self.item_id}'
@@ -157,3 +156,21 @@ class Total_payment(models.Model):
     Eco_Tax = models.IntegerField('Eco Tax Price')
     Shipping_Cost = models.IntegerField('Shipping_Cost')
     
+class UserInfo(models.Model):
+    key = models.ForeignKey(User,on_delete=models.CASCADE,related_name='userinfo_rn')
+    name = models.CharField("User's name",max_length=255,blank=True)
+    surname = models.CharField("User's surname",max_length=255,blank=True)
+    phone = PhoneNumberField("User's phone number",blank=True)
+    adress = models.CharField("Delivery adress",max_length=255,null = True,blank=True)
+    
+class Payments_History(models.Model):
+    key = models.ForeignKey(User,on_delete=models.CASCADE,related_name='history_rn')
+    payment = models.CharField("Payment",max_length=255)
+    Payment_date = models.DateField('Payments date',auto_now_add=True,null = True)
+    Payments_time = models.TimeField('Payments time',auto_now_add=True,null = True)
+
+    def __str__(self):
+        return self.payment
+    
+class model404(models.Model):
+    img = models.ImageField('error Image',upload_to='Images')

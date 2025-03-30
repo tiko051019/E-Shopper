@@ -14,13 +14,16 @@
     <link href="{% static 'css/animate.css' %}" rel="stylesheet">
 	<link href="{% static 'css/main.css' %}" rel="stylesheet">
 	<link href="{% static 'css/responsive.css' %}" rel="stylesheet">
-	<link href="{% static 'login.css' %}" rel="stylesheet">
-	<link href="{% static 'details_botton.css' %}" rel="stylesheet">
-	<link rel="stylesheet" href="{% static 'ratingstars.css' %}">
-    <link rel="stylesheet" href="{% static 'reset.css' %}">
-	<link rel="stylesheet" href="{% static 'forgot.css' %}">
-	<link rel="stylesheet" href="{% static 'check.css' %}">
-	<link rel="stylesheet" href="{% static 'pagination.css' %}">
+	<link href="{% static 'css/login.css' %}" rel="stylesheet">
+	<link href="{% static 'css/details_botton.css' %}" rel="stylesheet">
+	<link rel="stylesheet" href="{% static 'css/ratingstars.css' %}">
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}">
+	<link rel="stylesheet" href="{% static 'css/forgot.css' %}">
+	<link rel="stylesheet" href="{% static 'css/check.css' %}">
+	<link rel="stylesheet" href="{% static 'css/pagination.css' %}">
+	<link rel="stylesheet" href="{% static 'css/account.css' %}">
+	<link rel="stylesheet" href="{% static 'css/cart.css' %}">
+
 
     <!--[if lt IE 9]>
     <script src="js/html5shiv.js"></script>
@@ -31,6 +34,7 @@
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
 </head><!--/head-->
 
@@ -50,11 +54,11 @@
 					<div class="col-sm-6">
 						<div class="social-icons pull-right">
 							<ul class="nav navbar-nav">
-								<li><a href="{{ maininfo.facebook }}" target="_blank"><i class="fa fa-facebook"></i></a></li>
-								<li><a href="{{ maininfo.twitter }}" target="_blank"><i class="fa fa-twitter"></i></a></li>
-								<li><a href="{{ maininfo.linkedin }}" target="_blank"><i class="fa fa-linkedin"></i></a></li>
-								<li><a href="{{ maininfo.dribbble }}" target="_blank"><i class="fa fa-dribbble"></i></a></li>
-								<li><a href="{{ maininfo.googleplus }}" target="_blank"><i class="fa fa-google-plus"></i></a></li>
+								<li><a href="{{ maininfo.facebook }}" target="_blank"><i class="fa-brands fa-facebook"></i></a></li>
+								<li><a href="{{ maininfo.twitter }}" target="_blank"><i class="fa-brands fa-twitter"></i></a></li>
+								<li><a href="{{ maininfo.linkedin }}" target="_blank"><i class="fa-brands fa-linkedin"></i></a></li>
+								<li><a href="{{ maininfo.dribbble }}" target="_blank"><i class="fa-brands fa-dribbble"></i></a></li>
+								<li><a href="{{ maininfo.googleplus }}" target="_blank"><i class="fa-brands fa-google"></i></a></li>
 							</ul>
 						</div>
 					</div>
@@ -69,28 +73,19 @@
 						<div class="logo pull-left">
 							<a href="{% url 'home' %}"><img src="{{ maininfo.img.url }}" alt="" /></a>
 						</div>
-						<div class="user-auth">
-							{% if user.is_authenticated %}
-								<img src="https://icones.pro/wp-content/uploads/2021/02/icone-utilisateur-orange.png" alt="" width="30px">
-								<span>{{ user.username|capfirst }}</span>
-								<a href="{% url 'logout' %}">Sign Out</a>
-							{% else %}
-								<span>Guest</span>
-								<a href="{% url 'login' %}">Sign In</a>
-							{% endif %}
-						</div>
+						
 					</div>
 					<div class="col-sm-8">
 						<div class="shop-menu pull-right">
 							<ul class="nav navbar-nav">
 								<li><a href="{% url 'home' %}" class="{% if request.path == '/home/' %}active{% endif %}"><span>&#127968;</span>Home</a></li>
 								{% if user.is_authenticated %}
-								<li><a href="#">👤 User Account</a></li>
+								<li><a href="{% url 'account' user.id %}" class="{% if '/account/' in request.path %}active{% endif %}">👤 User Account</a></li>
 								{% endif %}
-								<li><a href="{% url 'products' %}"><p><span>&#127980;</span> Shop</p></a></li>
+								<li><a href="{% url 'products' %}" class="{% if request.path == '/products/' %}active{% endif %}"><p><span>&#127980;</span> Shop</p></a></li>
 								<li>
 									{% if user.is_authenticated %}
-									<a href="{% url 'cart' user.id %}">
+									<a href="{% url 'cart' user.id %}" class="{% if '/cart/' in request.path %}active{% endif %}">
 										{% else %}
 									<a href="{% url 'login' %}">
 										{% endif %}
@@ -101,7 +96,7 @@
 								{% endif %}
 								<ul class="nav navbar-nav collapse navbar-collapse">
 									<li><a href="{% url 'contact' %}" class="{% if request.path == '/contact/' %}active{% endif %}"><span>&#128241;</span>Contact</a></li>
-								<li><a href="404.html" class="{% if request.path == '/404/' %}active{% endif %}"><span>&#9888;</span>404</a></li>
+								<li><a href="{% url 'page404' %}" class="{% if request.path == '/page404/' %}active{% endif %}"><span>&#9888;</span>404</a></li>
 							</ul>
 						</div>
 					</div>
@@ -162,23 +157,11 @@
 						<div class="single-widget">
 							<h2>Service</h2>
 							<ul class="nav nav-pills nav-stacked">
-								<li><a href="#">Online Help</a></li>
-								<li><a href="#">Contact Us</a></li>
-								<li><a href="#">Order Status</a></li>
-								<li><a href="#">Change Location</a></li>
-								<li><a href="#">FAQ’s</a></li>
-							</ul>
-						</div>
-					</div>
-					<div class="col-sm-2">
-						<div class="single-widget">
-							<h2>Quock Shop</h2>
-							<ul class="nav nav-pills nav-stacked">
-								<li><a href="#">T-Shirt</a></li>
-								<li><a href="#">Mens</a></li>
-								<li><a href="#">Womens</a></li>
-								<li><a href="#">Gift Cards</a></li>
-								<li><a href="#">Shoes</a></li>
+								<li><a href="{% url 'contact' %}" onclick="scrollToTop()">Contact Us</a></li>
+								{% if user.is_authenticated %}
+								<li><a href="{% url 'account' user.id %}" onclick="scrollToTop()">Change Delivery Address</a></li>
+								{% endif %}
+
 							</ul>
 						</div>
 					</div>
@@ -186,23 +169,37 @@
 						<div class="single-widget">
 							<h2>Policies</h2>
 							<ul class="nav nav-pills nav-stacked">
-								<li><a href="#">Terms of Use</a></li>
-								<li><a href="#">Privecy Policy</a></li>
-								<li><a href="#">Refund Policy</a></li>
-								<li><a href="#">Billing System</a></li>
-								<li><a href="#">Ticket System</a></li>
+								<li><a href="{% url 'privacy' %}" onclick="scrollToTop()">Privacy Policy</a></li>
+								<li><a href="{% url 'page404' %}" onclick="scrollToTop()">404 Page</a></li>
 							</ul>
 						</div>
 					</div>
+					{% if user.is_authenticated %}
 					<div class="col-sm-2">
 						<div class="single-widget">
-							<h2>About Shopper</h2>
+							<h2>Fast actions</h2>
 							<ul class="nav nav-pills nav-stacked">
-								<li><a href="#">Company Information</a></li>
-								<li><a href="#">Careers</a></li>
-								<li><a href="#">Store Location</a></li>
-								<li><a href="#">Affillate Program</a></li>
-								<li><a href="#">Copyright</a></li>
+								<li><a href="{% url 'account' user.id %}" onclick="scrollToTop()">Your account</a></li>
+								<li><a href="{% url 'cart' user.id %}" onclick="scrollToTop()">Your cart</a></li>
+							</ul>
+						</div>
+					</div>
+					{% else %}
+					<div class="col-sm-2">
+						<div class="single-widget">
+							<h2></h2>
+							<ul class="nav nav-pills nav-stacked">
+							</ul>
+						</div>
+					</div>
+					{% endif %}
+					<div class="col-sm-2">
+						<div class="single-widget">
+							<h2>News About Us</h2>
+							<ul class="nav nav-pills nav-stacked">
+								<li><a href="{{ maininfo.facebook }}" target="_blank" onclick="scrollToTop()">Facebook</a></li>
+								<li><a href="{{ maininfo.twitter }}" target="_blank" onclick="scrollToTop()">Twitter</a></li>
+								<li><a href="{{ maininfo.linkedin }}" target="_blank" onclick="scrollToTop()">LinkedIn</a></li>
 							</ul>
 						</div>
 					</div>
@@ -226,9 +223,16 @@
 				</div>
 			</div>
 		</div>
-		
-	</footer><!--/Footer-->
+
 	
+	</footer><!--/Footer-->
+	<!-- ----------------------------------------Add Item Button --------------------------------------- -->
+	<script>
+		function scrollToTop() {
+		  window.scrollTo(0, 0); // Scroll to the top of the page
+		}
+	  </script>
+	  
 	<script>
 		document.addEventListener("DOMContentLoaded", function () {
 			// Restore scroll position after page load
@@ -242,6 +246,8 @@
 			});
 		});
 	</script>
+
+	<!-- --------------------------------------------Paginator------------------------------------------- -->
 	<script>
 		// Scroll to the top of the page when a pagination button is clicked
 		document.querySelectorAll('.pagination a').forEach(link => {
@@ -251,7 +257,7 @@
 			});
 		});
 	</script>
-	
+	<script src="https://js.stripe.com/v3/"></script>
     <script src="{% static 'js/jquery.js' %}"></script>
 	<script src="{% static 'js/bootstrap.min.js' %}"></script>
 	<script src="{% static 'js/jquery.scrollUp.min.js' %}"></script>

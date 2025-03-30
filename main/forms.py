@@ -22,3 +22,8 @@ class ForgotForm(ModelForm):
     class Meta:
         model = User
         fields = ['username']
+
+class UserInfoForm(ModelForm):
+    class Meta:
+        model = UserInfo
+        fields = '__all__'

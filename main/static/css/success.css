@@ -1,0 +1,55 @@
+/* General Body and Layout */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #fff8f2; /* Soft light orange background */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Container to center the content */
+.container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Message Box */
+.message-box {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.message-box h2 {
+    color: #27ae60; /* Green color for success */
+    font-size: 28px;
+    margin-bottom: 15px;
+}
+
+.message-box p {
+    color: #333;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.message-box a {
+    display: inline-block;
+    padding: 12px 25px;
+    background-color: #f39c12; /* Orange button color */
+    color: #fff;
+    font-size: 16px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.message-box a:hover {
+    background-color: #e67e22; /* Darker orange when hovered */
+}

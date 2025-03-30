@@ -1,3 +1,4 @@
+import os
 """
 Django settings for Shopping project.
 
@@ -134,3 +135,8 @@ EMAIL_HOST_PASSWORD = 'xnnkorsmhhlxuraw'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_BECKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# Stripe API keys
+
+STRIPE_PUBLIC_KEY = "pk_test_51R7M624g1bkh7OZmHpe2V2RhAeV5TlrrKzgCWHJqphkhZNwoO7yf0QDliV8jKyGIeF6TYfjFkJAtMV1iUXYnwCc500w39Ek7L5"
+STRIPE_SECRET_KEY = "sk_test_51R7M624g1bkh7OZmhFnAFgvJGwoTdKGJTUDSGiYhqEwGFs2nQv6SCBjOaG5S08vSzPS1BEDAc0HzNhlbBzIzqn4G00vWqHtgxm"

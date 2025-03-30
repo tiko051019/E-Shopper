@@ -11,8 +11,12 @@ from django.http import HttpResponse
 from django.conf import settings
 from .models import *
 from .forms import *
+import stripe
 import random
 import math
+
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 #--------------------------------------------------------------
 #--------------------Login,Register,Logout---------------------
@@ -93,8 +97,15 @@ class HomeListView(ListView):
         category = Category.objects.all()
         items = Items.objects.all()[:6]
         itemsname = ItemsName.objects.all()
-        
+        dctt = {}
+        for i in itemsname:
+            for j in i.itemsname_rn.all():
+                j.price_now = (j.price * (100 - j.discount))/100
+                dctt[j.id] = j.price_now
+        for i in items:
+            i.price_now = (i.price * (100 - i.discount))/100
         context = {
+            'dctt':dctt,
             'carousel':carousel,
             'category':category,
             'items':items,
@@ -123,13 +134,21 @@ def filter_home_products(request, category_name, subcategory_name=''):
     carousel = Carousel.objects.all()
     category = Category.objects.all()
     itemsname = ItemsName.objects.all()
+    for i in items:
+        i.price_now = (i.price * (100 - i.discount))/100
+    dctt = {}
+    for i in itemsname:
+        for j in i.itemsname_rn.all():
+            j.price_now = (j.price * (100 - j.discount))/100
+            dctt[j.id] = j.price_now
     
     context = {
         'carousel':carousel,
         'category':category,
         'items':items,
         'itemsname':itemsname,
-        'categories': Category.objects.all()
+        'categories': Category.objects.all(),
+        'dctt':dctt
     }
     MainInfoF(context)
     MainInlcude(context)
@@ -149,7 +168,8 @@ class ProductsPage(ListView):
         paginator = Paginator(allitems, 9) 
         page_number = request.GET.get('page') 
         page_obj = paginator.get_page(page_number)
-            
+        for i in page_obj:
+            i.price_now = (i.price * (100 - i.discount))/100
         context = {
             'products':products,
             'page_obj':page_obj,
@@ -168,20 +188,22 @@ def filter_products(request, category_name, subcategory_name=''):
     if subcategory_name:
         subcategory = SubCategory.objects.filter(subname=subcategory_name, key=category).first()
         if subcategory:
-            allitems = Items.objects.filter(key1=category, key2=subcategory)
+            page_obj = Items.objects.filter(key1=category, key2=subcategory)
         else:
             return HttpResponse("Subcategory not found")
     else:
-        allitems = Items.objects.filter(key1=category)
+        page_obj = Items.objects.filter(key1=category)
     category = Category.objects.all()
     products = Products.objects.get()
     
     context = {
         'category':category,
-        'allitems':allitems,
+        'page_obj':page_obj,
         'products':products,
         'categories': Category.objects.all()
     }
+    for i in page_obj:
+            i.price_now = (i.price * (100 - i.discount))/100
     MainInfoF(context)
     MainInlcude(context)
     SaveItems_Id_F(request,context)
@@ -262,6 +284,9 @@ class Product_Details(DetailView):
         else:
             rate = 0
 
+        for i in items:
+            i.price_now = (i.price * (100 - i.discount))/100
+        mainitem.price_now = (mainitem.price * (100 - mainitem.discount))/100
         context = {
             'details':details,
             'rate':rate,
@@ -309,22 +334,28 @@ class Product_Details(DetailView):
 
 class CartPage(ListView):
     template_name = 'cart.html'
-
-    def get(self,request,id):
-        userr = get_object_or_404(User, pk = id)
+    
+    def get(self,request,uid,token):
+        uid = urlsafe_base64_decode(uid).decode()
+        userr = get_object_or_404(User, pk = uid)
         taxes = Total_payment.objects.get()
         saved_in_cart = UserSave.objects.filter(user_id = userr)
+        userinfo = userr.userinfo_rn.first()
+        adress = userinfo.adress
+        for i in saved_in_cart:
+            i.item_id.price_now = (i.item_id.price * (100 - i.item_id.discount))/100
         total = 0
         dct = {}
         for i in saved_in_cart:
-            dct[i] = i.item_id.price * i.quantity
+            dct[i] = i.item_id.price_now * i.quantity
         total_price = 0
         for i in saved_in_cart:
-            total_price += i.item_id.price * i.quantity
+            total_price += i.item_id.price_now * i.quantity
         total = total_price
         total += taxes.Eco_Tax + taxes.Shipping_Cost
 
         context = {
+            'adress':adress,
             'total':total,
             'taxes':taxes,
             "dct":dct,
@@ -333,6 +364,45 @@ class CartPage(ListView):
         MainInfoF(context)
         return render(request,self.template_name,context)
     
+    def post(self,request,uid,token):
+        uid = urlsafe_base64_decode(uid).decode()
+        userr = get_object_or_404(User, pk = uid)
+        taxes = Total_payment.objects.get()
+        saved_in_cart = UserSave.objects.filter(user_id = userr)
+        dct = {}
+        for i in saved_in_cart:
+            dct[i] = i.item_id.price * i.quantity
+        total = 0
+        total_price = 0
+        for i in saved_in_cart:
+            total_price += i.item_id.price * i.quantity
+        total = total_price
+        total += taxes.Eco_Tax + taxes.Shipping_Cost
+
+        session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=[{
+                'price_data': {
+                    'currency': 'usd',
+                    'product_data': {
+                        'name': 'price',
+                    },
+                    'unit_amount': total*100, 
+                },
+                'quantity': 1,
+            }],
+            mode='payment',
+            success_url='http://127.0.0.1:8000/remove_items',
+            cancel_url='http://127.0.0.1:8000/cancel',
+        )
+        return redirect(session.url, code=303)
+    
+def cart_encode(request,id):
+    userr = get_object_or_404(User,pk = id)
+    uid = urlsafe_base64_encode(force_bytes(userr.pk))
+    token = default_token_generator.make_token(userr)
+    return redirect('cart_page',uid,token)    
+
 
 def Item_Quantity_Add(request,user_id,item_id):
     userr = get_object_or_404(User, pk = user_id)
@@ -375,7 +445,7 @@ def SaveItems_Id_F(request,context):
         usersave = UserSave.objects.filter(user_id = userr)
         for i in usersave:
             id_saver.append(i.item_id.id)
-        context['id_saver'] = id_saver
+        context['id_saver'] = id_saver                  
 
 #--------------------------------------------------------------
 #-------------------------ForgotPage---------------------------
@@ -449,6 +519,107 @@ def PasswordReset(request,uidb64, token):
 
 
 #--------------------------------------------------------------
-#--------------------------------------------------------------
+#--------------------Payment_Succes/Cancel---------------------
 #--------------------------------------------------------------
 
+def payment_success(request):
+    return render(request, 'payment_success.html')
+
+
+def remove_from_cart(request):
+    userr = get_object_or_404(User, pk = request.user.id)
+    taxes = Total_payment.objects.get()
+    saved_in_cart = UserSave.objects.filter(user_id = userr)
+    for i in saved_in_cart:
+        i.item_id.price_now = (i.item_id.price * (100 - i.item_id.discount))/100
+    total_price = 0
+    for i in saved_in_cart:
+        total_price += i.item_id.price_now * i.quantity
+    total_price += taxes.Eco_Tax + taxes.Shipping_Cost
+    Payments_History.objects.create(key = userr,payment = total_price)
+    UserSave.objects.filter(user_id = userr).delete()
+    return redirect('success')
+
+
+def payment_cancel(request):
+    return render(request, 'payment_cancel.html')
+
+#---------------------------------------------------------------
+#------------------------Account_Page---------------------------
+#---------------------------------------------------------------
+
+class Account_Page(ListView):
+    template_name = 'account.html'
+
+    def get(self,request,uid,token):
+        uid = urlsafe_base64_decode(uid).decode()
+        userr = get_object_or_404(User,pk = uid)
+        userinfo = userr.userinfo_rn.first()
+        history = Payments_History.objects.filter(key = userr).order_by('-id')
+        if userinfo == None:
+            UserInfo.objects.create(key = userr)
+        
+        name = userinfo.name if userinfo else ''
+        surname = userinfo.surname if userinfo else ''
+        phone = userinfo.phone if userinfo else ''
+        adress = userinfo.adress if userinfo else ''
+        context = {
+            'history':history,
+            'name':name,
+            'surname':surname,
+            'phone':phone,
+            'adress':adress,
+            'userr':userr
+        }
+        MainInfoF(context)
+        return render(request,self.template_name,context)
+    
+    def post(self,request,uid,token):
+        uid = urlsafe_base64_decode(uid).decode()
+        userr = get_object_or_404(User, pk=uid)
+        
+        new_name = request.POST.get('name')
+        new_surname = request.POST.get('surname')
+        new_phone = request.POST.get('phone')
+        new_adress = request.POST.get('adress')
+
+        
+        user_info = userr.userinfo_rn.first()
+        if new_name:
+            user_info.name = new_name  
+        if new_surname:
+            user_info.surname = new_surname 
+        if new_phone:
+            user_info.phone = new_phone
+        if new_adress:
+            user_info.adress = new_adress
+        user_info.save() 
+        
+        return redirect(request.META.get('HTTP_REFERER', '/'))
+
+def account_encode(request,id):
+    userr = get_object_or_404(User,pk = id)
+    uid = urlsafe_base64_encode(force_bytes(userr.pk))
+    token = default_token_generator.make_token(userr)
+    return redirect('account_page',uid,token)
+
+#---------------------------------------------------------------
+#-----------------------------404-------------------------------
+#---------------------------------------------------------------
+
+def page404(request):
+    err404 = model404.objects.get()
+    context = {
+        'err404':err404
+    }   
+    MainInfoF(context)
+    return render(request,'404.html',context)
+
+def privacy_policy(request):
+    context = {}
+    MainInfoF(context)
+    return render(request,'privacy.html',context)
+
+#---------------------------------------------------------------
+#-----------------------------end-------------------------------
+#---------------------------------------------------------------
