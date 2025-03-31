@@ -11,10 +11,6 @@
 							{% csrf_token %}
 							<input type="text" name="username" placeholder="Userame" />
 							<input type="password" name="password" placeholder="Password" />
-							<span>
-								<input type="checkbox" class="checkbox"> 
-								Keep me signed in
-							</span>
 							<button name="login" type="submit" class="btn btn-default">Sign In</button>
 						</form>
 						<a href="{% url 'forgot_1' %}" class="forgot-password-link">Forgot password?</a>

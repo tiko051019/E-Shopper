@@ -353,6 +353,8 @@ class CartPage(ListView):
             total_price += i.item_id.price_now * i.quantity
         total = total_price
         total += taxes.Eco_Tax + taxes.Shipping_Cost
+        if total == 15:
+            total = 0
 
         context = {
             'adress':adress,

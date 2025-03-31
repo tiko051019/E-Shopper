@@ -96,8 +96,8 @@
 								{% endif %}
 								<ul class="nav navbar-nav collapse navbar-collapse">
 									<li><a href="{% url 'contact' %}" class="{% if request.path == '/contact/' %}active{% endif %}"><span>&#128241;</span>Contact</a></li>
-								<li><a href="{% url 'page404' %}" class="{% if request.path == '/page404/' %}active{% endif %}"><span>&#9888;</span>404</a></li>
-							</ul>
+
+								</ul>
 						</div>
 					</div>
 				</div>
@@ -170,7 +170,6 @@
 							<h2>Policies</h2>
 							<ul class="nav nav-pills nav-stacked">
 								<li><a href="{% url 'privacy' %}" onclick="scrollToTop()">Privacy Policy</a></li>
-								<li><a href="{% url 'page404' %}" onclick="scrollToTop()">404 Page</a></li>
 							</ul>
 						</div>
 					</div>
