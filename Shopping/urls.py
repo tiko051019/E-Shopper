@@ -21,8 +21,11 @@ from django.conf import settings
 from django.shortcuts import redirect
 
 urlpatterns = [
-    path('', lambda request: redirect('/home/')),     
-
     path('admin/', admin.site.urls),
+    path('', lambda request: redirect('/home/')),     
     path('',include('main.urls')),
+
+    path('dashboard/', lambda request: redirect('/dashboard_home/')), 
+    path('dashboard/',include('dashboard.urls')),
+    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
