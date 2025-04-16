@@ -8,6 +8,9 @@
         <div>
             <h3>{{ user.username|capfirst }}</h3>
             <p class="emailll">{{ user.email }}</p>
+            {% if user.is_superuser %}
+                <a href="{% url 'dashboard_home' %}" class="orange-button">Check Dashboard</a>
+            {% endif %}
         </div>
     </div>
 

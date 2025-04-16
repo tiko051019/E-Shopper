@@ -14,7 +14,7 @@ from .forms import *
 import stripe
 import random
 import math
-
+from dashboard.models import *
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -42,6 +42,11 @@ def login_register_view(request):
                     to=[request.POST.get("email")],
                 )
                 email_msg.send()
+
+                UsersRegisteringCountinMonth.objects.get_or_create(Month = f'{datetime.datetime.now().strftime('%B')}',Year = f'{datetime.datetime.now().year}')
+                countt = get_object_or_404(UsersRegisteringCountinMonth,Month = f'{datetime.datetime.now().strftime('%B')}',Year = f'{datetime.datetime.now().year}')
+                countt.Count +=1
+                countt.save()
                 return redirect("login")
             else:
                 reg_message = form.errors
@@ -353,8 +358,6 @@ class CartPage(ListView):
             total_price += i.item_id.price_now * i.quantity
         total = total_price
         total += taxes.Eco_Tax + taxes.Shipping_Cost
-        if total == 15:
-            total = 0
 
         context = {
             'adress':adress,
@@ -538,6 +541,12 @@ def remove_from_cart(request):
     for i in saved_in_cart:
         total_price += i.item_id.price_now * i.quantity
     total_price += taxes.Eco_Tax + taxes.Shipping_Cost
+
+    obj = get_object_or_404(DashboardInfo,pk = 1)
+    obj.Value+=total_price
+    obj.Orders = saved_in_cart.count()
+    obj.save()
+    
     Payments_History.objects.create(key = userr,payment = total_price)
     UserSave.objects.filter(user_id = userr).delete()
     return redirect('success')

@@ -9,22 +9,34 @@ const random = (max = 100) => {
 
 const randomData = () => {
   return [
-    54,
-    random(),
-    random(),
-    random(),
-    random(),
-    random(),
-    random(),
-    random(),
-    random(),
-    random(),
-    random(),
-    random(),
+    window.UsersCount,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
   ]
 }
 
-const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const months = window.LastTwelveMonths
 
 const cssColors = (color) => {
   return getComputedStyle(document.documentElement).getPropertyValue(color)
@@ -99,7 +111,7 @@ const doughnutChart = new Chart(document.getElementById('doughnutChart'), {
     labels: ['Oct', 'Nov', 'Dec'],
     datasets: [
       {
-        data: [random(), random(), random()],
+        data: window.sum_list,
         backgroundColor: [colors.primary, colors.primaryLighter, colors.primaryLight],
         hoverBackgroundColor: colors.primaryDark,
         borderWidth: 0,
@@ -181,7 +193,7 @@ const lineChart = new Chart(document.getElementById('lineChart'), {
     labels: months,
     datasets: [
       {
-        data: randomData(),
+        data: window.myDataFromDjango,
         fill: false,
         borderColor: colors.primary,
         borderWidth: 2,
@@ -227,14 +239,21 @@ let randomUserCount = 0
 
 const usersCount = document.getElementById('usersCount')
 
-const fakeUsersCount = () => {
-  randomUserCount = random()
-  activeUsersChart.data.datasets[0].data.push(randomUserCount)
-  activeUsersChart.data.datasets[0].data.splice(0, 1)
-  activeUsersChart.update()
-  usersCount.innerText = randomUserCount
-}
-
 setInterval(() => {
-  fakeUsersCount()
+
+  // window.UsersCount = JSON.parse('{{ active_users_count|safe|escapejs }}')
+  // window.myDataFromDjango = JSON.parse('{{ my_list|safe|escapejs }}');
+  // window.LastTwelveMonths = JSON.parse('{{ my_list_2|safe|escapejs }}');
+  // // console.log(window.UsersCount);
+
+  fetch("http://127.0.0.1:8000/dashboard/api/active-users")
+    .then(res => res.json())
+    .then(res => {
+      // console.log("res=>", res);
+      randomUserCount = res.active_users_count;
+      activeUsersChart.data.datasets[0].data.push(randomUserCount)
+      activeUsersChart.data.datasets[0].data.splice(0, 1)
+      activeUsersChart.update()
+      usersCount.innerText = res.active_users_count;
+    }).catch(console.warn)
 }, 1000)

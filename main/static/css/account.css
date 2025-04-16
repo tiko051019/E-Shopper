@@ -138,3 +138,17 @@
 .payment-history-table tr:hover {
     background-color: #f9f9f9;
 }
+
+
+.orange-button {
+    background-color: orange;
+    color: white;
+    padding: 5px 16px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+.orange-button:hover {
+    background-color: darkorange;
+}
