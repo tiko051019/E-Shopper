@@ -13,6 +13,9 @@ Welcome to **E-Shopper**, your ultimate online shopping destination! Our platfor
 ✅ **Shopping Cart & Checkout** – Add items to your cart and complete purchases effortlessly.  
 ✅ **Order Tracking** – Stay updated with real-time order status.  
 ✅ **Responsive Design** – Optimized for all devices, including mobiles and tablets.  
+✅ **Admin Dashboard** – Monitor key site metrics such as user count, monthly registrations, and total payment revenue.
+
+
 
 ---
 
@@ -60,11 +63,6 @@ Access the site at **http://127.0.0.1:8000/**
 
 ---
 
-## 📸 Screenshots
-
-_Include some screenshots of your site here_
-
----
 
 ## 🤝 Contributing
 
